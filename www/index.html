@@ -1,4 +1,4 @@
-<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>چک‌لیست بهداشت حرفه‌ای بیمارستان ۱۴۰۵</title>
+<!doctype html><html lang="fa" dir="rtl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"><title>چک‌لیست بهداشت حرفه‌ای بیمارستان ۱۴۰۵</title>
 <style>
 :root{--b:#1d5f8a;--bd:#d5dde3;--bg:#f4f7f9}*{box-sizing:border-box}body{margin:0;font-family:Tahoma,"Segoe UI",sans-serif;background:var(--bg);color:#1c2b36;font-size:14px}
 header{background:linear-gradient(135deg,#0c3f6e,#2b8fd6);box-shadow:0 4px 14px #0004;color:#fff;padding:10px 16px;display:flex;flex-wrap:wrap;gap:10px;align-items:center;position:sticky;top:0;z-index:5}
@@ -48,7 +48,10 @@ header{--img:url(data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gIoSUNDX1BS
 #adm button[data-a^=x],#adm button[data-a=dv]{color:#b3261e}#adm .w{max-height:60vh}#adm td{vertical-align:middle}
 #at{position:fixed;bottom:18px;left:50%;transform:translateX(-50%);background:#0c3f6e;color:#fff;padding:8px 18px;border-radius:8px;opacity:0;pointer-events:none;transition:.2s;z-index:50}#at.on{opacity:1}
 @media print{#adm{display:none!important}}
-.rw[data-u]{cursor:pointer;border-radius:8px;padding:2px 4px}.rw[data-u]:hover{background:#eef6fb}</style></head><body>
+.rw[data-u]{cursor:pointer;border-radius:8px;padding:2px 4px}.rw[data-u]:hover{background:#eef6fb}
+html,body{max-width:100%;overflow-x:hidden}.lay>*,.dash>*,.kp>*,main,section,.card{min-width:0}.w{max-width:100%}
+@media(max-width:800px){header{position:static;padding:8px;gap:6px}h1{font-size:15px;margin:0;width:100%}nav{display:flex;flex-wrap:wrap;gap:6px;width:100%}nav button{padding:6px 9px;font-size:13px}.tools{flex-wrap:wrap;margin:0;width:100%;gap:6px}main{padding:8px}.f{gap:6px}.f>*{max-width:100%}.dash{grid-template-columns:1fr}.wide{grid-column:auto}.kp{grid-template-columns:repeat(2,1fr)}}
+</style></head><body>
 <header><h1>چک‌لیست بهداشت حرفه‌ای بیمارستان – ۱۴۰۵</h1>
 <nav id=tabs><button data-t=stats class=on>آمار و رصد</button><button data-t=vis>وضعیت بازدید</button><button data-t=new>بازدید جدید</button><button data-t=def>نواقص و اقدامات</button><button data-t=unit>چک‌لیست واحدها</button><button data-t=temp>اندازه‌گیری عوامل زیان‌آور</button><button data-t=prog>برنامه عملیاتی</button><button data-t=adm>پنل مدیریت</button></nav>
 <div class=tools><label><input type=checkbox id=edit> ویرایش امتیازها</label><label><input type=checkbox id=only checked> فقط داده‌های ۱۴۰۵</label><button id=xls>اکسل</button><button id=prA>گزارش چاپی همه</button><button id=exp>پشتیبان</button><label class=btn>بازیابی<input type=file id=imp hidden></label><button id=rst>بازنشانی</button><button onclick=print()>چاپ</button></div></header>
@@ -134,7 +137,7 @@ $('#st').onclick=e=>{const r=e.target.closest('tr.cl');if(r){cur=+r.dataset.u;go
 $('#utb').onclick=e=>{const c=e.target.closest('td.sc');if(!c||!$('#edit').checked)return;const it=D[cur].items[c.dataset.i],p=+c.dataset.p,o=[null,2,1,0,'NA'],n=o[(o.indexOf(it.s[p])+1)%5];it.s[p]=n;OV[`${cur}|${c.dataset.i}|${p}`]=n===null?'X':n;save();rUnit()};
 $('#ta').onclick=()=>{const t=parseFloat($('#tt').value);if(isNaN(t))return;const f=FAC[+$('#ty').value],lm=parseFloat($('#tm').value);TL.push({d:$('#td').value,u:D[+$('#tu').value].name,f:f[0],dir:f[2],lim:isNaN(lm)?f[1]:lm,t,w:$('#tw').value});save();$('#tt').value='';rTemp()};$('#tl').onclick=e=>{if(e.target.dataset.x){TL.splice(+e.target.dataset.x,1);save();rTemp()}};
 $('#td').value=new Date().toLocaleDateString('fa-IR-u-nu-latn');
-function dl(name,txt,type){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=name;a.click()}
+async function dl(name,txt,type){const C=window.Capacitor;if(C&&C.isNativePlatform&&C.isNativePlatform()){try{const ext=(name.split('.').pop()||'txt').toLowerCase(),t=new Date().toISOString().slice(0,10),fn=({json:'oh-backup-',csv:'oh-defects-',xls:'oh-checklist-1405-'}[ext]||'oh-file-')+t+'.'+ext;const P=C.Plugins;const r=await P.Filesystem.writeFile({path:fn,data:txt,directory:'CACHE',encoding:'utf8'});await P.Share.share({title:fn,url:r.uri,dialogTitle:'ذخیره یا ارسال فایل'});return}catch(e){if(/cancel/i.test(String(e&&e.message||e)))return;alert('خطا در ذخیره فایل: '+(e&&e.message||e));return}}const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([txt],{type}));a.download=name;a.click()}
 $('#csv').onclick=()=>dl('نواقص.csv','\ufeff'+['واحد,ردیف,بند,دوره,امتیاز,توضیحات,وضعیت اقدام,مسئول,مهلت'].concat(dRows().map(x=>{const c=CA[x.k]||{};return[x.u,x.n,x.t,x.pl,x.v,x.nt,ST.find(a=>a[0]===stOf(x))[1],c.who||'',c.due||''].map(q=>'"'+String(q).replace(/"/g,'""')+'"').join(',')})).join('\n'),'text/csv');
 $('#exp').onclick=()=>dl('پشتیبان-بهداشت-حرفه‌ای.json',JSON.stringify({ov:OV,tl:TL,vs:VS,ca:CA,db:useSnap?{units:D,prog:PROG,gn:GN,fac:FAC}:null}),'application/json');
 $('#imp').onchange=e=>{const f=e.target.files[0];if(!f)return;f.text().then(t=>{try{const j=JSON.parse(t);OV=j.ov||{};TL=j.tl||[];VS=j.vs||{};CA=j.ca||{};useSnap=false;save();j.db?localStorage.setItem('oh_db',JSON.stringify(j.db)):localStorage.removeItem('oh_db');location.reload()}catch(x){alert('فایل معتبر نیست')}})};
