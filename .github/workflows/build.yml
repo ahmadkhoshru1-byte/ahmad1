@@ -1,0 +1,27 @@
+name: Build Nursing APK
+on:
+  push:
+    branches: [nursing-app]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: 8.9
+      - run: gradle assembleRelease --no-daemon --stacktrace
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          cp app/build/outputs/apk/release/app-release.apk nursing-planner.apk
+          gh release delete nursing-apk --yes --cleanup-tag || true
+          gh release create nursing-apk nursing-planner.apk --target "$GITHUB_SHA" --title "Nursing Planner APK" --notes "signed release build"
