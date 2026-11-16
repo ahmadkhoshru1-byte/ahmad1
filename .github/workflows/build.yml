@@ -1,0 +1,29 @@
+name: Build Windows EXE
+on:
+  push:
+    branches: [zabihi-windows]
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  build:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - run: npm install --no-audit --no-fund
+      - run: npx electron-builder --win nsis --publish never
+        env:
+          CSC_IDENTITY_AUTO_DISCOVERY: "false"
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ls -la dist
+          gh release delete zabihi-win --yes --cleanup-tag || true
+          gh release create zabihi-win dist/ZabihiFacilities-Setup-1.0.0.exe --target "$GITHUB_SHA" --title "Zabihi Windows installer" --notes "unsigned installer"
