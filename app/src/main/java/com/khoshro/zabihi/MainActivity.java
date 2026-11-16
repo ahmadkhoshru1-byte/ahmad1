@@ -9,6 +9,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.view.View;
+import android.view.Window;
 import android.provider.MediaStore;
 import android.util.Base64;
 import android.webkit.JavascriptInterface;
@@ -227,6 +229,25 @@ public class MainActivity extends Activity {
             i.setType("text/plain");
             i.putExtra(Intent.EXTRA_TEXT, text);
             runOnUiThread(() -> startActivity(Intent.createChooser(i, "ارسال")));
+        }
+
+        @JavascriptInterface
+        public void setTheme(final boolean dark) {
+            runOnUiThread(() -> {
+                int bar = dark ? 0xFF0B3F63 : 0xFF1FA5EC;
+                int bg = dark ? 0xFF0C1520 : 0xFFEEF3F8;
+                Window w = getWindow();
+                w.setStatusBarColor(bar);
+                w.setNavigationBarColor(bg);
+                web.setBackgroundColor(bg);
+                View d = w.getDecorView();
+                int f = d.getSystemUiVisibility();
+                if (Build.VERSION.SDK_INT >= 26) {
+                    if (dark) f &= ~View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                    else f |= View.SYSTEM_UI_FLAG_LIGHT_NAVIGATION_BAR;
+                }
+                d.setSystemUiVisibility(f);
+            });
         }
 
         @JavascriptInterface
